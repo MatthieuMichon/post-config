@@ -10,7 +10,7 @@
 EXPECT_SCRIPT_PATH="/tmp/script"
 
 # Remote scripts URI root
-URI_ROOT="http://files.tozai.net/"
+URI_ROOT="https://raw.githubusercontent.com/MatthieuMichon/post-config/master/scripts/"
 
 # OS Release file
 OSR_FILE="/etc/os-release"
@@ -44,12 +44,7 @@ get_distro () {
 
 
 exec_remote () {
-  bash -c ( \
-    exec 2>&1; \
-    wget --no-check-certificate -O $NEXT_FILE $URI_ROOT$1 && \
-      chmod a+x $NEXT_FILE && $NEXT_FILE; \
-    rm $NEXT_FILE) | tee $NEXT_FILE_return.txt
-
+  bash <(wget --no-check-certificate -qO - ${URI_ROOT}$1)
 }
 
 

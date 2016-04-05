@@ -4,7 +4,4 @@
 
 SCRIPT_URL="https://raw.githubusercontent.com/MatthieuMichon/post-config/master/scripts/ovh/ovh"
 
-exec 2>&1
-PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/sfw/bin/
-echo "Getting script"
-wget --no-check-certificate -O /tmp/script $SCRIPT_URL && chmod a+x /tmp/script && /tmp/script
+bash <(wget --no-check-certificate -qO - $SCRIPT_URL)
