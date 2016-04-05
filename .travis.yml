@@ -1,4 +1,3 @@
 language: bash
 
 script: ./test/bootstrap
-
