@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Simple bash script for testing purposes, always returns zero.
+
+echo "${0##*/}: returning 0."
+exit 0

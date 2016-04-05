@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+# Second stage script for OVH dedicated servers, targets Debian distribution
+
+apt-get --assume-yes update
+apt-get --assume-yes upgrade
+apt-get --assume-yes dist-upgrade

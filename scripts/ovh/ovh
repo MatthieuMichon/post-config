@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+#
+# First stage script for OVH dedicated servers
+# - Check server is an OVH dedicated server
+# - Get distro name
+# - Download and execute appropriate scripts
+
+
+# OVH dedicated servers are expected to run this script as "script"
+EXPECT_SCRIPT_PATH="/tmp/script"
+
+# Remote scripts URI root
+URI_ROOT="http://files.tozai.net/"
+
+# OS Release file
+OSR_FILE="/etc/os-release"
+
+# Secondary script file
+NEXT_FILE=/tmp/next
+
+# Error codes
+ERR_OK=0
+ERR_NOT_DEDICATED=1
+ERR_OSR_FILE=2
+ERR_DISTRO=3
+ERR_TRAVIS=255
+
+
+check_ovh_dedicated () {
+  if ! [[ "${0}" == $EXPECT_SCRIPT_PATH ]]; then
+    err "unexpected script path ${0}: Not a dedicated server."
+    exit $ERR_NOT_DEDICATED
+  fi
+}
+
+
+get_distro () {
+  if ! [[ -r $OSR_FILE ]]; then
+    err "cannot access $OSR_FILE: No such file."
+    exit $ERR_OSR_FILE
+  fi
+  DISTRO=$(sed -n '/^ID=/s///p' /etc/os-release)
+}
+
+
+exec_remote () {
+  bash -c ( \
+    exec 2>&1; \
+    wget --no-check-certificate -O $NEXT_FILE $URI_ROOT$1 && \
+      chmod a+x $NEXT_FILE && $NEXT_FILE; \
+    rm $NEXT_FILE) | tee $NEXT_FILE_return.txt
+
+}
+
+
+cfg_debian () {
+  exec_remote("ovh/ovh_debian")
+  exec_remote("debian/deb_host")
+}
+
+
+run_tests () {
+  err "test error message"
+  get_distro_name
+  echo $DISTRO
+  exec_remote("tests/returns_zero")
+  if ! [[ $? -eq 0 ]]; then
+    exit $ERR_TRAVIS
+  fi
+  exec_remote("tests/returns_one")
+  if ! [[ $? -eq 1 ]]; then
+    exit $ERR_TRAVIS
+  fi
+}
+
+
+main () {
+  if $TRAVIS; then
+    run_tests
+    exit $ERR_OK
+  fi
+
+  check_ovh_dedicated
+  get_distro_name
+
+  case "$DISTRO" in
+    debian)
+      cfg_debian
+      ;;
+
+    *)
+      err "unsupported distribution: $DISTRO"
+      exit $ERR_DISTRO
+      ;;
+  esac
+  touch postconfig_completed
+}
+
+
+err() { cat <<< "${0##*/}: $@" 1>&2; }
+
+
+main
