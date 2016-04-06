@@ -44,9 +44,7 @@ get_distro () {
 
 
 exec_remote () {
-  echo "URI: $URI_ROOT$1"
   bash <(wget --no-check-certificate -O - $URI_ROOT$1)
-  echo "Return code: $?"
   return $?
 }
 
@@ -62,12 +60,14 @@ run_tests () {
   get_distro
   echo $DISTRO
   exec_remote "tests/returns_zero"
-  if ! [[ $? -eq 0 ]]; then
+  local retval=$?
+  if ! [[ $retval -eq 0 ]]; then
     exit $ERR_TRAVIS
   fi
   echo "Return zero ok."
   exec_remote "tests/returns_one"
-  if ! [[ $? -eq 1 ]]; then
+  local retval=$?
+  if ! [[ $retval -eq 1 ]]; then
     err "Returned $? instead of 1."
     exit $ERR_TRAVIS
   fi
