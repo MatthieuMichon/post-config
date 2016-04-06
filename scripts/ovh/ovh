@@ -56,7 +56,7 @@ cfg_debian () {
 
 run_tests () {
   err "test error message"
-  get_distro_name
+  get_distro
   echo $DISTRO
   exec_remote "tests/returns_zero"
   if ! [[ $? -eq 0 ]]; then
