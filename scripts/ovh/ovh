@@ -49,8 +49,8 @@ exec_remote () {
 
 
 cfg_debian () {
-  exec_remote("ovh/ovh_debian")
-  exec_remote("debian/deb_host")
+  exec_remote "ovh/ovh_debian"
+  exec_remote "debian/deb_host"
 }
 
 
