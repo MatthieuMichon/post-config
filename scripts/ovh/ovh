@@ -44,7 +44,8 @@ get_distro () {
 
 
 exec_remote () {
-  bash <(wget --no-check-certificate -qO - ${URI_ROOT}$1)
+  echo "URI: $URI_ROOT$1"
+  bash <(wget --no-check-certificate -O - $URI_ROOT$1)
   echo "Return code: $?"
 }
 
