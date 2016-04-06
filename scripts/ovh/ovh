@@ -58,11 +58,11 @@ run_tests () {
   err "test error message"
   get_distro_name
   echo $DISTRO
-  exec_remote("tests/returns_zero")
+  exec_remote"tests/returns_zero"
   if ! [[ $? -eq 0 ]]; then
     exit $ERR_TRAVIS
   fi
-  exec_remote("tests/returns_one")
+  exec_remote"tests/returns_one"
   if ! [[ $? -eq 1 ]]; then
     exit $ERR_TRAVIS
   fi
