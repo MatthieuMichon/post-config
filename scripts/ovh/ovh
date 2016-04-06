@@ -65,6 +65,7 @@ run_tests () {
   echo "Return zero ok."
   exec_remote "tests/returns_one"
   if ! [[ $? -eq 1 ]]; then
+    err "Returned $? instead of 1."
     exit $ERR_TRAVIS
   fi
   echo "Return non-zero ok"
