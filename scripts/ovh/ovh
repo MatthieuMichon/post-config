@@ -62,10 +62,13 @@ run_tests () {
   if ! [[ $? -eq 0 ]]; then
     exit $ERR_TRAVIS
   fi
+  echo "Return zero ok."
   exec_remote "tests/returns_one"
   if ! [[ $? -eq 1 ]]; then
     exit $ERR_TRAVIS
   fi
+  echo "Return non-zero ok"
+  exit 0
 }
 
 
