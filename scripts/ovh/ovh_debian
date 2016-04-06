@@ -5,3 +5,5 @@
 apt-get --assume-yes update
 apt-get --assume-yes upgrade
 apt-get --assume-yes dist-upgrade
+
+touch ovh_debian_done
