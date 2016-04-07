@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 #
+# Post-installation Configuration Scripts
+#
 # First stage script for OVH dedicated servers
-# - Check server is an OVH dedicated server
 # - Get distro name
+# - Check server is an OVH dedicated server
 # - Download and execute appropriate scripts
 
 
@@ -57,8 +59,6 @@ cfg_debian () {
 
 run_tests () {
   err "test error message"
-  get_distro
-  echo $DISTRO
   exec_remote "tests/returns_zero"
   local retval=$?
   if ! [[ $retval -eq 0 ]]; then
@@ -75,13 +75,14 @@ run_tests () {
 
 
 main () {
+  get_distro
+
   if [[ $TRAVIS ]]; then
     run_tests
     exit $ERR_OK
   fi
 
   check_ovh_dedicated
-  get_distro_name
 
   case "$DISTRO" in
     debian)

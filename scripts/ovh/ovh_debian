@@ -1,9 +1,32 @@
 #!/usr/bin/env bash
 #
-# Second stage script for OVH dedicated servers, targets Debian distribution
+# Post-installation Configuration Scripts
+#
+# Common Debian based host tasks
+# - Install base packages
+# - User parameters
 
-apt-get --assume-yes update
-apt-get --assume-yes upgrade
-apt-get --assume-yes dist-upgrade
 
-touch ovh_debian_done
+do_upgrade () {
+  apt-get --assume-yes update
+  apt-get --assume-yes upgrade
+  apt-get --assume-yes dist-upgrade
+}
+
+
+fix_locales () {
+  sed -i -e 's/^en_GB/# en_GB/' /etc/locale.gen
+  sed -i -e 's/en_GB/en_US/' /etc/default/locale
+  sed -i -e 's/# LANG/LANG/' /etc/default/locale
+  dpkg-reconfigure --frontend=noninteractive locales
+}
+
+
+main () {
+  do_upgrade
+  fix_locales
+  touch ovh_debian_done
+}
+
+
+main
