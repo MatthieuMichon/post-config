@@ -95,6 +95,7 @@ main () {
       ;;
   esac
   touch postconfig_completed
+  exit 1
 }
 
 
