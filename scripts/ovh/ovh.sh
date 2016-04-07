@@ -75,7 +75,7 @@ run_tests () {
 
 
 main () {
-  if $TRAVIS; then
+  if [[ $TRAVIS ]]; then
     run_tests
     exit $ERR_OK
   fi
