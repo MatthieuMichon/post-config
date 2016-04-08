@@ -12,7 +12,8 @@
 EXPECT_SCRIPT_PATH="/tmp/script"
 
 # Remote scripts URI root
-URI_ROOT="https://raw.githubusercontent.com/MatthieuMichon/post-config/master/"
+URI_ROOT="https://raw.githubusercontent.com/"\
+"MatthieuMichon/post-config/master/"
 
 # OS Release file
 OSR_FILE="/etc/os-release"
@@ -46,6 +47,7 @@ get_distro () {
 
 
 exec_remote () {
+  # 'raw.githubusercontent.com' domain may not clear HTTPS CA checks
   bash <(wget --no-check-certificate -O - $URI_ROOT$1)
   return $?
 }
@@ -54,6 +56,7 @@ exec_remote () {
 cfg_debian () {
   exec_remote "scripts/ovh/ovh_debian"
   exec_remote "scripts/debian/deb_host"
+  exec_remote "scripts/debian/deb_lxc"
 }
 
 

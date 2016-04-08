@@ -2,16 +2,8 @@
 #
 # Post-installation Configuration Scripts
 #
-# Common Debian based host tasks
-# - Install base packages
-# - User parameters
-
-
-do_upgrade () {
-  apt-get --assume-yes update
-  apt-get --assume-yes upgrade
-  apt-get --assume-yes dist-upgrade
-}
+# OVH-specific actions for Debian based hosts
+# - Fix locals
 
 
 fix_locales () {
@@ -23,7 +15,6 @@ fix_locales () {
 
 
 main () {
-  do_upgrade
   fix_locales
   touch ovh_debian_done
 }

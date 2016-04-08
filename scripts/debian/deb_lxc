@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+#
+# Post-installation Configuration Scripts
+#
+# LXC related Debian based host tasks
+# - Install LXC packages
+# - Setup network config
+# - Commit config changes
+
+
+install_lxc_packages () {
+  apt-get --assume-yes install lxc debootstrap bridge-utils
+}
+
+
+create_bridge () {
+
+  cat>>/etc/network/interfaces <<EOF
+
+# Internal bridge interface for LXC, added by deb_lxc post-config script
+auto lxcbr0
+iface lxcbr0 inet static
+	bridge_ports none
+	bridge_fd 0
+	bridge_max_wait 0
+	address 192.168.0.254
+	netmask 255.255.255.0
+	up iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+EOF
+}
+
+
+enable_forwarding () {
+  sed -i '/ip_forward/s/#//' /etc/sysctl.conf
+}
+
+
+commit_changes () {
+  sysctl -p /etc/sysctl.conf
+  systemctl restart networking.service
+}
+
+
+main () {
+  install_lxc_packages
+  create_bridge
+  enable_forwarding
+  commit_changes
+  touch deb_lxc_done
+}
+
+
+main
