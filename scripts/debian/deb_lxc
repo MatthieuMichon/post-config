@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#
+
 # Post-installation Configuration Scripts
 #
 # LXC related Debian based host tasks
@@ -41,11 +41,18 @@ commit_changes () {
 }
 
 
+create_x11cli () {
+  lxc-create -t debian x11cli
+  lxc-start -d --name x11cli
+}
+
+
 main () {
   install_lxc_packages
   create_bridge
   enable_forwarding
   commit_changes
+  create_x11cli
   touch deb_lxc_done
 }
 
